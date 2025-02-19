@@ -10,14 +10,14 @@ import Foundation
 struct Recipe: Decodable{
     let cuisine: String
     let name: String
-    let photo_url_large: String
-    let photo_url_small: String
+    let photo_url_large: String?
+    let photo_url_small: String?
     let uuid: String
-    let source_url: String
-    let youtube_url: String
+    let source_url: String?
+    let youtube_url: String?
 }
 
-struct RecipesResponse{
+struct RecipesResponse: Decodable{
     let recipes: [Recipe]
 }
 

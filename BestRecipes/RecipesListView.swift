@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct RecipesListView: View {
+    
+    @StateObject private var viewModel = RecipesListViewModel()
+    
     var body: some View {
         NavigationStack{
-            List(MockData.recipes, id: \.uuid){ recipe in
+            List(viewModel.recipes, id: \.uuid){ recipe in
                 RecipeCell(recipe: recipe)
             }
-            .navigationTitle(Text("🍪 Recipes 🍱"))
+            .navigationTitle(Text("🍪 Best Recipes 🍱"))
+        }
+        .task {
+            viewModel.getRecipes()
         }
     }
 }
@@ -27,9 +33,9 @@ struct RecipeCell: View{
         HStack{
             Image("chocolate_raspberry_brownies_small")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 125, height: 100)
-                .clipShape(.rect(cornerRadius: 8))
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 120, height: 90)
+                .clipShape(.rect(cornerRadius: 5))
             
             VStack(alignment: .leading, spacing: 5){
                 Text(recipe.name)
