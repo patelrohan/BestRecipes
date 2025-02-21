@@ -31,8 +31,7 @@ struct RecipeCell: View{
     
     var body: some View{
         HStack{
-            Image("chocolate_raspberry_brownies_small")
-                .resizable()
+            RecipeImage(urlString: recipe.photo_url_small)
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 120, height: 90)
                 .clipShape(.rect(cornerRadius: 5))
@@ -47,8 +46,13 @@ struct RecipeCell: View{
                     .fontWeight(.semibold)
                 
                 HStack{
-                    Image(systemName: "link.circle.fill")
-                    Image(systemName: "video.fill")
+                    if let articleURL = recipe.source_url{
+                        Image(systemName: "link.circle.fill")
+                    }
+                    if let youtubeURL = recipe.youtube_url{
+                        Image(systemName: "video.fill")
+                    }
+                    
                 }
             }
         }
