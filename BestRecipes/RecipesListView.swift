@@ -12,14 +12,19 @@ struct RecipesListView: View {
     @StateObject private var viewModel = RecipesListViewModel()
     
     var body: some View {
-        NavigationStack{
-            List(viewModel.recipes, id: \.uuid){ recipe in
-                RecipeCell(recipe: recipe)
+        ZStack {
+            NavigationStack{
+                List(viewModel.recipes, id: \.uuid){ recipe in
+                    RecipeCell(recipe: recipe)
+                }
+                .navigationTitle(Text("🍪 Best Recipes 🍱"))
             }
-            .navigationTitle(Text("🍪 Best Recipes 🍱"))
-        }
-        .task {
-            viewModel.getRecipes()
+            .task {
+                viewModel.getRecipes()
+            }
+            if viewModel.isLoading{
+                LoadingView()
+            }
         }
     }
 }
@@ -39,26 +44,54 @@ struct RecipeCell: View{
             VStack(alignment: .leading, spacing: 5){
                 Text(recipe.name)
                     .font(.headline)
-                    .fontWeight(.semibold)
+                    .fontWeight(.bold)
                 
                 Text(recipe.cuisine)
-                    .foregroundStyle(.secondary)
-                    .fontWeight(.semibold)
+                    .font(.subheadline)
                 
                 HStack{
-                    if let articleURL = recipe.source_url{
-                        Image(systemName: "link.circle.fill")
+                    if let articleURLString = recipe.source_url,
+                        let articleURL = URL(string: articleURLString){
+                        Link(destination: articleURL) {
+                            Image(systemName: "link.circle.fill")
+                                .tint(.brandPrimary)
+                        }
                     }
-                    if let youtubeURL = recipe.youtube_url{
-                        Image(systemName: "video.fill")
+                    if let youtubeURLString = recipe.youtube_url,
+                       let youtubeURL = URL(string: youtubeURLString){
+                        Link(destination: youtubeURL) {
+                            Image(systemName: "video.fill")
+                                .tint(.brandPrimary)
+                        }
                     }
-                    
                 }
             }
         }
     }
 }
 
+
+struct LoadingView: View{
+    
+    var body: some View{
+        ZStack(alignment: .center){
+            Color(.systemBackground)
+                .opacity(0.8)
+                .ignoresSafeArea(.all)
+            
+            VStack(spacing: 35){
+                ProgressView()
+                    .scaleEffect(2.5)
+                    .tint(.brandPrimary)
+                
+                Text("Loading best recipes on the planet...")
+                    .font(.subheadline)
+            }
+            .frame(width: 250, height: 150, alignment: .center)
+            .padding()
+        }
+    }
+}
 
 #Preview {
     RecipesListView()

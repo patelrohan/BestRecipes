@@ -10,12 +10,14 @@ import Foundation
 @MainActor class RecipesListViewModel: ObservableObject {
     
     @Published var recipes: [Recipe] = []
+    @Published var isLoading = false
     
     func getRecipes(){
+        isLoading = true
         Task{
             do{
                 recipes = try await NetworkManager.shared.fetchRecipes()
-                print(recipes)
+                isLoading = false
             }catch{
                 print(error)
             }
