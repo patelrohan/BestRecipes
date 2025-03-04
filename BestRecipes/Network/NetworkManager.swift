@@ -28,12 +28,15 @@ final class NetworkManager{
         
         let (data, response) = try await URLSession.shared.data(from: url)
         
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else{
+            throw NetworkError.invalidResponse
+        }
+        
         do{
             let decoder = JSONDecoder()
             let decodedResponse = try decoder.decode(RecipesResponse.self, from: data)
             return decodedResponse.recipes
         }catch{
-            print("Decoding error: \(error)")  // Print the specific decoding error
             throw NetworkError.invalidData
         }
     }
@@ -42,7 +45,7 @@ final class NetworkManager{
     func downloadImage(fromUrl urlString: String?) async throws -> UIImage?{
         
         guard let urlString = urlString else{
-            return nil
+            throw NetworkError.invalidURL
         }
         
         let cacheKey = NSString(string: urlString)
@@ -52,13 +55,13 @@ final class NetworkManager{
         }
         
         guard let url = URL(string: urlString) else{
-            return nil
+            throw NetworkError.invalidURL
         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
 
         guard let image = UIImage(data: data) else{
-            return nil
+            throw NetworkError.invalidData
         }
         
         self.imageCache.setObject(image, forKey: cacheKey)
