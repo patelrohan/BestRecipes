@@ -10,12 +10,16 @@ import SwiftUI
 @MainActor final class ImageLoader: ObservableObject{
     
     @Published var image: Image? = nil
+    @Published var isLoadingRecipeThumbnails = false
     
     func downloadImage(fromUrl url: String?){
+        
+        isLoadingRecipeThumbnails = true
         Task{
             do{
                 guard let uiImage = try await NetworkManager.shared.downloadImage(fromUrl: url) else{ return }
                 self.image = Image(uiImage: uiImage)
+                isLoadingRecipeThumbnails = false
                 
             }
         }
@@ -28,7 +32,7 @@ struct RemoteImage: View{
     var image: Image?
     
     var body: some View{
-        image?.resizable() ?? Image("food-placeholder")
+        image?.resizable() ?? Image(systemName: "fork.knife.circle")
     }
 }
 
