@@ -10,6 +10,7 @@ import SwiftUI
 struct RecipesListView: View {
     
     @StateObject private var viewModel = RecipesListViewModel()
+    @StateObject var imageLoader = ImageLoader()
     
     var body: some View {
         ZStack {
@@ -22,8 +23,15 @@ struct RecipesListView: View {
             .task {
                 viewModel.getRecipes()
             }
-            if viewModel.isLoading{
+            .alert(item: $viewModel.alertItem) { alertItem in
+                Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissBtn)
+            }
+            if (viewModel.isLoadingRecipes || imageLoader.isLoadingRecipeThumbnails){
                 LoadingView()
+            }
+            
+            if viewModel.recipes.isEmpty{
+                EmptyRecipesListView(imageName:"fork.knife.circle", message: "No recipes found. \nTry again later.")
             }
         }
     }
@@ -38,8 +46,8 @@ struct RecipeCell: View{
         HStack{
             RecipeImage(urlString: recipe.photo_url_small)
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 120, height: 90)
-                .clipShape(.rect(cornerRadius: 5))
+                .frame(width: 120, height: 120)
+                .clipShape(.rect(cornerRadius: 7.5))
             
             VStack(alignment: .leading, spacing: 5){
                 Text(recipe.name)
