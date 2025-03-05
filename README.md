@@ -1,6 +1,14 @@
 # Summary: 
 **BestRecipes** is a curated recipe app that showcases the finest dishes from various cuisines around the world. Each recipe includes a link to a detailed article and, when available, a YouTube video for guided cooking.
 
+
+
+
+https://github.com/user-attachments/assets/c1678984-e084-4e58-afe9-51df2adbf4ec
+
+
+
+
 ### Technologies Used
 * SwiftUI
 * MVVM
