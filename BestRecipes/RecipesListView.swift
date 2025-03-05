@@ -16,16 +16,16 @@ struct RecipesListView: View {
         ZStack {
             NavigationStack{
                 List(viewModel.recipes, id: \.uuid){ recipe in
-                    RecipeCell(recipe: recipe)
+                    VStack{
+                        RecipeCell(recipe: recipe)
+                    }
                 }
+                .listStyle(.plain)
                 .navigationTitle(Text("🍪 Best Recipes 🍱"))
                 .refreshable {
                     viewModel.refresh()
                 }
                 .buttonStyle(.borderless)
-            }
-            .task {
-                viewModel.getRecipes()
             }
             .alert(item: $viewModel.alertItem) { alertItem in
                 Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissBtn)
@@ -39,6 +39,9 @@ struct RecipesListView: View {
                 EmptyRecipesListView(imageName:"fork.knife.circle", message: "No recipes found. \nTry again later.")
             }
         }
+        .task {
+            viewModel.getRecipes()
+        }
     }
 }
 
@@ -48,42 +51,47 @@ struct RecipeCell: View{
     var recipe: Recipe
     
     var body: some View{
-        HStack{
-            RecipeImage(urlString: recipe.photo_url_small)
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 120, height: 120)
-                .clipShape(.rect(cornerRadius: 7.5))
+        VStack{
+            RecipeImage(urlString: recipe.photo_url_large)
+                .scaledToFill()
+                .frame(width: UIScreen.main.bounds.width - 50, height: 175)
+                .clipped()
+                .clipShape(.rect(cornerRadius: 5))
             
-            VStack(alignment: .leading, spacing: 5){
-                Text(recipe.name)
-                    .font(.title3)
-                    .fontWeight(.bold)
+            
+            HStack(spacing: 15){
                 
-                Text(recipe.cuisine)
-                    .font(.subheadline)
+                VStack(alignment: .leading){
+                    Text(recipe.name)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Text(recipe.cuisine)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
                 
-                HStack(spacing: 12.5){
-                    if let articleURLString = recipe.source_url, let articleURL = URL(string: articleURLString){
-                        Link(destination: articleURL) {
-                            Image(systemName: "link.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .tint(.brandPrimary)
-                                .frame(width: 30, height: 30)
-                        }
+                Spacer()
+                
+                if let articleURLString = recipe.source_url, let articleURL = URL(string: articleURLString){
+                    Link(destination: articleURL) {
+                        Image(systemName: "link.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .tint(.brandPrimary)
+                            .frame(width: 30, height: 30)
                     }
+                }
                 
-                    if let youtubeURLString = recipe.youtube_url, let youtubeURL = URL(string: youtubeURLString){
-                        Link(destination: youtubeURL) {
-                            Image(systemName: "video.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 32.5, height: 35)
-                                .tint(.brandPrimary)
-                                
-                        }
+                if let youtubeURLString = recipe.youtube_url, let youtubeURL = URL(string: youtubeURLString){
+                    Link(destination: youtubeURL) {
+                        Image(systemName: "video.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 32.5, height: 35)
+                            .tint(.brandPrimary)
                     }
-                }.offset(y:5)
+                }
             }
         }
     }
