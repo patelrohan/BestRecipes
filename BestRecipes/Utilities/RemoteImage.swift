@@ -11,9 +11,12 @@ import SwiftUI
     
     @Published var image: Image? = nil
     @Published var isLoadingRecipeThumbnails = false
+   
     
+    /// Downloads an image from the given URL and updates the `image` property.
+    /// - Parameter url: The URL string of the image to be downloaded
     func downloadImage(fromUrl url: String?){
-        
+
         isLoadingRecipeThumbnails = true
         Task{
             do{

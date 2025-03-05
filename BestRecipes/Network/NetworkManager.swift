@@ -20,6 +20,9 @@ final class NetworkManager{
     private let emptyURL     = baseURL + "recipes-empty.json"
     private let malformedURL = baseURL + "recipes-malformed.json"
     
+    
+    /// Fetches a list of recipes from the remote API.
+    /// - Returns: An array of `Recipe` objects if the request is successful.
     func fetchRecipes() async throws -> [Recipe]{
         
         guard let url = URL(string: recipeURL) else{
@@ -41,6 +44,9 @@ final class NetworkManager{
         }
     }
     
+    /// Downloads an image from the given URL or retrieves it from the cache if available.
+    /// - Parameter urlString: A string representing the URL of the image.
+    /// - Returns: A `UIImage` if successfully downloaded or found in cache
     func downloadImage(fromUrl urlString: String?) async throws -> UIImage?{
          
          guard let urlString = urlString else{
@@ -66,6 +72,9 @@ final class NetworkManager{
      }
     
     
+    /// Gets recipe image from cache if available
+    /// - Parameter cacheKey: A URL string representing the unique key for the cached image
+    /// - Returns: The cached `UIImage` if found, otherwise `nil`.
     func retrieveImageFromCache(location cacheKey: String) -> UIImage?{
             return imageCache.object(forKey: NSString(string: cacheKey))
     }

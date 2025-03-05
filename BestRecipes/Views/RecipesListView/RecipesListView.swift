@@ -37,6 +37,7 @@ struct RecipesListView: View {
             
             else if !viewModel.isLoadingRecipes && viewModel.recipes.isEmpty{
                 EmptyRecipesListView(imageName:"fork.knife.circle", message: "No recipes found. \nTry again later.")
+                    .environmentObject(viewModel)
             }
         }
         .task {

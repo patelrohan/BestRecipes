@@ -13,7 +13,10 @@ import Foundation
     @Published var isLoadingRecipes = false
     @Published var alertItem: AlertItem?
     
+    
+    /// Fetches recipes from the API
     func getRecipes(){
+        print("getRecipes()")
         isLoadingRecipes = true
         Task{
             do{
@@ -43,6 +46,8 @@ import Foundation
         }
     }
     
+    
+    /// Removes all recipes when triggered from pull to refresh
     func refresh(){
         recipes.removeAll()
         getRecipes()
