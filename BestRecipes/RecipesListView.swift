@@ -26,11 +26,12 @@ struct RecipesListView: View {
             .alert(item: $viewModel.alertItem) { alertItem in
                 Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissBtn)
             }
+            
             if (viewModel.isLoadingRecipes || imageLoader.isLoadingRecipeThumbnails){
                 LoadingView()
             }
             
-            if viewModel.recipes.isEmpty{
+            else if !viewModel.isLoadingRecipes && viewModel.recipes.isEmpty{
                 EmptyRecipesListView(imageName:"fork.knife.circle", message: "No recipes found. \nTry again later.")
             }
         }

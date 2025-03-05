@@ -20,7 +20,6 @@ import SwiftUI
                 guard let uiImage = try await NetworkManager.shared.downloadImage(fromUrl: url) else{ return }
                 self.image = Image(uiImage: uiImage)
                 isLoadingRecipeThumbnails = false
-                
             }
         }
     }
