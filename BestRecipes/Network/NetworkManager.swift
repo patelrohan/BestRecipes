@@ -41,31 +41,33 @@ final class NetworkManager{
         }
     }
     
-    
     func downloadImage(fromUrl urlString: String?) async throws -> UIImage?{
-        
-        guard let urlString = urlString else{
-            throw NetworkError.invalidURL
-        }
-        
-        let cacheKey = NSString(string: urlString)
-        
-        if let image = imageCache.object(forKey: cacheKey){
-            return image
-        }
-        
-        guard let url = URL(string: urlString) else{
-            throw NetworkError.invalidURL
-        }
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
+         
+         guard let urlString = urlString else{
+             throw NetworkError.invalidURL
+         }
+     
+        if let image = retrieveImageFromCache(location: urlString){
+             return image
+         }
+         
+         guard let url = URL(string: urlString) else{
+             throw NetworkError.invalidURL
+         }
+         
+         let (data, _) = try await URLSession.shared.data(from: url)
 
-        guard let image = UIImage(data: data) else{
-            throw NetworkError.invalidData
-        }
-        
-        self.imageCache.setObject(image, forKey: cacheKey)
-        return image
+         guard let image = UIImage(data: data) else{
+             throw NetworkError.invalidData
+         }
+         
+        self.imageCache.setObject(image, forKey: NSString(string: urlString) )
+         return image
+     }
+    
+    
+    func retrieveImageFromCache(location cacheKey: String) -> UIImage?{
+            return imageCache.object(forKey: NSString(string: cacheKey))
     }
 }
 
