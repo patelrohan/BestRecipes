@@ -42,4 +42,9 @@ import Foundation
             }
         }
     }
+    
+    func refresh(){
+        recipes.removeAll()
+        getRecipes()
+    }
 }

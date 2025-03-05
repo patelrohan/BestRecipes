@@ -19,6 +19,10 @@ struct RecipesListView: View {
                     RecipeCell(recipe: recipe)
                 }
                 .navigationTitle(Text("🍪 Best Recipes 🍱"))
+                .refreshable {
+                    viewModel.refresh()
+                }
+                .buttonStyle(.borderless)
             }
             .task {
                 viewModel.getRecipes()
@@ -52,28 +56,34 @@ struct RecipeCell: View{
             
             VStack(alignment: .leading, spacing: 5){
                 Text(recipe.name)
-                    .font(.headline)
+                    .font(.title3)
                     .fontWeight(.bold)
                 
                 Text(recipe.cuisine)
                     .font(.subheadline)
                 
-                HStack{
-                    if let articleURLString = recipe.source_url,
-                        let articleURL = URL(string: articleURLString){
+                HStack(spacing: 12.5){
+                    if let articleURLString = recipe.source_url, let articleURL = URL(string: articleURLString){
                         Link(destination: articleURL) {
                             Image(systemName: "link.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
                                 .tint(.brandPrimary)
+                                .frame(width: 30, height: 30)
                         }
                     }
-                    if let youtubeURLString = recipe.youtube_url,
-                       let youtubeURL = URL(string: youtubeURLString){
+                
+                    if let youtubeURLString = recipe.youtube_url, let youtubeURL = URL(string: youtubeURLString){
                         Link(destination: youtubeURL) {
                             Image(systemName: "video.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 32.5, height: 35)
                                 .tint(.brandPrimary)
+                                
                         }
                     }
-                }
+                }.offset(y:5)
             }
         }
     }
